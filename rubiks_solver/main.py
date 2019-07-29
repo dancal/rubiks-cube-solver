@@ -392,6 +392,7 @@ class MainView(tk.Tk):
 class PiCameraPhotos():
     def __init__(self):
         # initialize camera with a set of predefined values
+		"""
         self.camera = picamera.PiCamera()
         # self.camera.resolution = (1920, 1080)
         # self.camera.framerate = 30
@@ -406,18 +407,31 @@ class PiCameraPhotos():
         
         # also initialize the container for the image
         self.stream = io.BytesIO() 
+		"""
+
+	    pygame.camera.init()
+    	pygame.camera.list_cameras()
+    	self.camera	= pygame.camera.Camera('/dev/video0', (800, 600))
+	    self.camera.start()
 
     def capture(self):
         """
         Captures an image from the Pi Camera.
         :return: A Pillow.Image image.
         """
+		"""
         self.stream.seek(0)
         self.camera.capture(self.stream, use_video_port=True, resize=(480, 360), format='jpeg')
         self.stream.seek(0)
         logger.info('image captured')
         return Image.open(self.stream)
+		"""
+	    img = cam.get_image()
+        return Image.open(img)
 
+    	# pygame.image.save(img, './images/rubiks-side-test.png')
+        # return Image.open('./images/rubiks-side-test.png')
+		
     def get_camera_roi(self, xoff, yoff, dim, pad):
         """
         Computes the Regions-of-Interest for the cube's labels.

@@ -7,7 +7,7 @@ The code here is Licensed under  The MIT License (MIT) . Please review the  LICE
 Copyright (C) 2016 Dexter Industries
 '''
 
-import PCA9685
+import maestro
 
 SERVO_1 = 0
 SERVO_2 = 1
@@ -31,23 +31,19 @@ def translate(value, leftMin, leftMax, rightMin, rightMax):
     return int(rightMin + (valueScaled * rightSpan))
 
 class PivotPi(object):
+
     servo_controller=None
-    addr_00=0x40
-    addr_01=0x41
-    addr_10=0x42
-    addr_11=0x43
-    
     # Configure min and max servo pulse lengths
     servo_min = 150  # Min pulse length out of 4096
     servo_max = 600  # Max pulse length out of 4096
     frequency = 60;
-    def __init__(self, addr = 0x40, actual_frequency = 60):# Set the address and optionally the PWM frequency, which should be 60Hz, but can be off by at least 5%. One measures at about 59.1, one at about 60.1, and one at about 63.5Hz.
+    def __init__(self, actual_frequency = 60):# Set the address and optionally the PWM frequency, which should be 60Hz, but can be off by at least 5%. One measures at about 59.1, one at about 60.1, and one at about 63.5Hz.
         try:
-            self.servo_controller = PCA9685.PCA9685(address=addr)
-            self.frequency = actual_frequency;
+            self.servo_controller 	= maestro.Controller()
+            self.frequency 			= actual_frequency;
             
             # Set frequency to 60hz, good for servos.
-            self.servo_controller.set_pwm_freq(60)
+            self.servo_controller.set_speed(60)
         except:
             # pass
             raise IOError("PivotPi not connected")
@@ -63,12 +59,13 @@ class PivotPi(object):
         if angle >= 0 and angle <= 180 and channel >= 0 and channel <= 7:
             pwm_to_send = 4095 - translate(angle, 0, 180, self.servo_min, self.servo_max)
             try:
-                self.servo_controller.set_pwm(channel, 0, int(pwm_to_send))
+                self.servo_controller.setTarget(channel, 0, int(pwm_to_send))
                 return 1
             except:
                 raise IOError("PivotPi not connected")
         return -1
     
+"""
     def angle_microseconds(self, channel, time):
         if channel >= 0 and channel <= 7:
             try:
@@ -100,3 +97,4 @@ class PivotPi(object):
             except:
                 raise IOError("PivotPi not connected")
         return -1
+"""
