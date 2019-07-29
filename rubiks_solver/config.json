@@ -1,13 +1,13 @@
 {
     "camera": {
         "Pad (px)": 45,
-        "Size (px)": 13,
-        "X Offset (px)": 178,
-        "Y Offset (px)": 113
+        "Size (px)": 30,
+        "X Offset (px)": 130,
+        "Y Offset (px)": 60
     },
     "servos": {
         "s1": {
-            "high": 163,
+            "high": 161,
             "low": 120
         },
         "s2": {

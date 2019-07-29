@@ -9,7 +9,9 @@ from collections import Counter
 
 import tkinter as tk
 import threading as td
-import picamera
+#import picamera
+import pygame
+import pygame.camera
 import cv2
 import numpy as np
 import arms
@@ -280,7 +282,7 @@ class Arms(Page):
                 self.low_servo_labels[-1].pack(side='left', fill=tk.BOTH, padx=2)
                 # low positioned entries
                 self.low_servo_vals.append(tk.IntVar())
-                self.low_servo_entries.append(tk.Entry(self.arm_labels[arm], justify='left', width=3, textvariable=self.low_servo_vals[-1]))
+                self.low_servo_entries.append(tk.Entry(self.arm_labels[arm], justify='left', width=5, textvariable=self.low_servo_vals[-1]))
                 self.low_servo_entries[-1].pack(side='left', fill=tk.X, padx=2)
 
                 # high positioned labels
@@ -288,7 +290,7 @@ class Arms(Page):
                 self.high_servo_labels[-1].pack(side='left', fill=tk.BOTH, padx=2)
                 # high positioned entries
                 self.high_servo_vals.append(tk.IntVar())
-                self.high_servo_entries.append(tk.Entry(self.arm_labels[arm], justify='left', width=3, textvariable=self.high_servo_vals[-1]))
+                self.high_servo_entries.append(tk.Entry(self.arm_labels[arm], justify='left', width=5, textvariable=self.high_servo_vals[-1]))
                 self.high_servo_entries[-1].pack(side='left', fill=tk.X, padx=2)
 
                 # slider
@@ -392,7 +394,7 @@ class MainView(tk.Tk):
 class PiCameraPhotos():
     def __init__(self):
         # initialize camera with a set of predefined values
-		"""
+        """
         self.camera = picamera.PiCamera()
         # self.camera.resolution = (1920, 1080)
         # self.camera.framerate = 30
@@ -407,30 +409,23 @@ class PiCameraPhotos():
         
         # also initialize the container for the image
         self.stream = io.BytesIO() 
-		"""
+        """
 
-	    pygame.camera.init()
-    	pygame.camera.list_cameras()
-    	self.camera	= pygame.camera.Camera('/dev/video0', (800, 600))
-	    self.camera.start()
+        pygame.camera.init()
+        pygame.camera.list_cameras()
+        self.camera	= pygame.camera.Camera('/dev/video0', (800, 600))
+        self.camera.start()
 
     def capture(self):
         """
         Captures an image from the Pi Camera.
         :return: A Pillow.Image image.
         """
-		"""
-        self.stream.seek(0)
-        self.camera.capture(self.stream, use_video_port=True, resize=(480, 360), format='jpeg')
-        self.stream.seek(0)
-        logger.info('image captured')
-        return Image.open(self.stream)
-		"""
-	    img = cam.get_image()
-        return Image.open(img)
+        img = self.camera.get_image()
+        # return Image.open(img)
 
-    	# pygame.image.save(img, './images/rubiks-side-test.png')
-        # return Image.open('./images/rubiks-side-test.png')
+        pygame.image.save(img, '/dev/shm/rubiks.jpg')
+        return Image.open('/dev/shm/rubiks.jpg')
 		
     def get_camera_roi(self, xoff, yoff, dim, pad):
         """
@@ -1030,7 +1025,7 @@ if __name__ == '__main__':
     fsm_thread.start()
 
     try:
-        app = MainView(size='800x400', name='Rubik\'s Solver')
+        app = MainView(size='800x400', name='WASAMD - Rubik\'s Cube Solver')
         app.mainloop()
     except Exception as e:
         logger.exception(e)

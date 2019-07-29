@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 #
 # This is the Python library for controlling the PivotPi (https://www.dexterindustries.com/Pivotpi/)
-'''
-## License
-The code here is Licensed under  The MIT License (MIT) . Please review the  LICENSE.md file or (here)[https://github.com/DexterInd/Raspbian_For_Robots/blob/master/LICENSE.md] for more information
-Copyright (C) 2016 Dexter Industries
-'''
 
 import maestro
 
@@ -38,16 +33,16 @@ class PivotPi(object):
     servo_max = 600  # Max pulse length out of 4096
     frequency = 60;
     def __init__(self, actual_frequency = 60):# Set the address and optionally the PWM frequency, which should be 60Hz, but can be off by at least 5%. One measures at about 59.1, one at about 60.1, and one at about 63.5Hz.
-        try:
+        #try:
             self.servo_controller 	= maestro.Controller()
             self.frequency 			= actual_frequency;
             
             # Set frequency to 60hz, good for servos.
-            self.servo_controller.set_speed(60)
-        except:
+            # self.servo_controller.set_speed(60)
+        #except:
             # pass
-            raise IOError("PivotPi not connected")
-        return
+        #    raise IOError("PivotPi not connected")
+        #return
     
     def pwm(self, channel, on, off):
         try:
